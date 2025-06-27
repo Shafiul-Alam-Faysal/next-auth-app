@@ -24,9 +24,9 @@ const ProfilePage = () => {
 	};
 
 	const getUserDetails = async () => {
-		const res = await axios.get("/api/users/me");
+		const res = await axios.get("/api/users/me", { withCredentials: true });
 		console.log(res.data);
-		setData(res.data.data.user);
+		setData(res.data.data._id);
 	};
 
 	return (
@@ -34,7 +34,11 @@ const ProfilePage = () => {
 			<h1>Profile</h1>
 			<p>Profile page</p>
 			<h2 className="p-1 rounded bg-green-500">
-				{data === "" ? "Nothing" : <Link href={`/profile/${data}`}></Link>}
+				{data === "" ? (
+					"Nothing"
+				) : (
+					<Link href={`/profile/${data}`}>{data}</Link>
+				)}
 			</h2>
 			<button
 				onClick={logout}
