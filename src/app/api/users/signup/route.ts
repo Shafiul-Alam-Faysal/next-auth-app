@@ -1,16 +1,15 @@
 import { connect } from "@/dbConfig/dbConfig";
-import User from "@/models/userModel.js";
+import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
+import { sendEmail } from "@/helpers/mailer";
 
 connect();
 
 export async function POST(request: NextRequest) {
 	try {
-		await connect();
-
 		const reqBody = await request.json();
-		const { email, username, password } = reqBody;
+		const { username, email, password } = reqBody;
 
 		console.log(reqBody);
 
@@ -25,26 +24,28 @@ export async function POST(request: NextRequest) {
 		}
 
 		//hash password
-		const salt = await bcrypt.genSalt(10);
-		const hashedPassword = await bcrypt.hash(password, salt);
+		const salt = await bcryptjs.genSalt(10);
+		const hashedPassword = await bcryptjs.hash(password, salt);
 
 		const newUser = new User({
-			email,
 			username,
+			email,
 			password: hashedPassword,
 		});
 
 		const savedUser = await newUser.save();
 		console.log(savedUser);
 
-		return NextResponse.json(
-			{ message: "User created successfully", success: true, savedUser }
-			// { status: 201 }
-		);
+		//send verification email
 
-		//
+		await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id });
+
+		return NextResponse.json({
+			message: "User created successfully",
+			success: true,
+			savedUser,
+		});
 	} catch (error: any) {
-		console.error("❌ API error:", err);
 		return NextResponse.json({ error: error.message }, { status: 500 });
 	}
 }
