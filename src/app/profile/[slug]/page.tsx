@@ -4,7 +4,8 @@ export default async function ProfileSlugPage({
 	params: { slug: string };
 }) {
 	// await params (even if it's just destructuring)
-	const { slug } = await params;
+	// const { slug } = await params;
+	const { slug } = params;
 
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen py-2">
