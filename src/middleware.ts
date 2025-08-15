@@ -10,8 +10,13 @@ export function middleware(request: NextRequest) {
 	const token = request.cookies.get("token")?.value || ""; // get token from cookie
 
 	if (isPublicPath && token) {
+		return NextResponse.redirect(new URL("/profile", request.nextUrl));
+	}
+
+	if ((path === "/login" || path === "/signup") && token) {
 		return NextResponse.redirect(new URL("/", request.nextUrl));
 	}
+
 	if (!isPublicPath && !token) {
 		return NextResponse.redirect(new URL("/login", request.nextUrl));
 	}
