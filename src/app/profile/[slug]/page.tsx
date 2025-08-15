@@ -1,4 +1,5 @@
-export default async function ProfileSlugPage({
+export default function ProfileSlugPage({
+	// removed async
 	params,
 }: {
 	params: { slug: string };
