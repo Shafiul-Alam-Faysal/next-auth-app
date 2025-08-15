@@ -37,7 +37,7 @@ const ProfilePage = () => {
 				{data === "" ? (
 					"Nothing"
 				) : (
-					<Link href={`/profile/${data}`}>{data}</Link>
+					<Link href={`/profile/${data}`}>User _id: {data}</Link>
 				)}
 			</h2>
 			<button
